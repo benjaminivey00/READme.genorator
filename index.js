@@ -11,7 +11,7 @@ const writeFileAsync = util.promisify(fs.writeFile)
 
 function devQuestions(){
 
-    return inquirer.prompt(
+    return inquirer.prompt([
     {
         type: 'input',
         message: 'What is the project name?',
@@ -63,8 +63,7 @@ function devQuestions(){
         message: 'What is your email address?',
         name:'email'  
     },
-    )
-}
+])};
 
 // function to write README file
 function writeToFile(fileName, data) {
