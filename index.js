@@ -5,10 +5,6 @@ const inquirer = require('inquirer');
 
 const writeFileAsync = util.promisify(fs.writeFile)
 
-// array of questions for user
-// const questions = [
-// ];
-
 function devQuestions(){
 
     return inquirer.prompt([
@@ -42,16 +38,21 @@ function devQuestions(){
         message: 'What are the test instructions?',
         name:'test'  
     },
+    // {
+    //     type: 'checkbox',
+    //     message: 'Select a license?',
+    //     choices: [
+    //         'Apache',
+    //         'Boost',
+    //         'MIT',
+    //         'GNU GPLv3'
+    //     ],
+    //     name:'license'  
+    // },
     {
-        type: 'checkbox',
-        message: 'Select a license?',
-        choices: [
-            'Apache',
-            'Boost',
-            'MIT',
-            'GNU GPLv3'
-        ],
-        name:'license'  
+        type: 'input',
+        message: 'Do you have any questions?',
+        name:'questions'  
     },
     {
         type: 'input',
@@ -63,16 +64,58 @@ function devQuestions(){
         message: 'What is your email address?',
         name:'email'  
     },
-])};
-
-// function to write README file
-function writeToFile(fileName, data) {
+    ]);
 }
+
+function generateMarkdown(data) {
+    return `# ${data.title}
+  
+    # Table of Contents
+  
+    - [Description](#description)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Contribution](#contribution)
+    - [Test](#test)
+    - [License](#license)
+    - [Questions](#questions)
+
+  
+## Description:
+
+
+    ${data.description}
+    ## Installation:
+    ${data.installation}
+    ## Usage
+    ${data.usage}
+    ## Contributors
+    ${data.contribution}
+    ## Test
+    ${data.test}
+
+    ## Questions
+    ${data.questions}
+    ${data.username}
+    ${data.email}
+  `;
+  }
+  
+  module.exports = generateMarkdown;
 
 // function to initialize program
-function init() {
+async function init() {
+    try {
+            const data = await devQuestions();
 
-}
+            const readME = generateMarkdown(data);
+
+            await writeFileAsync("READ.md", readME);
+            console.log('success');
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 // function call to initialize program
 init();
